@@ -8,6 +8,7 @@ import {
   Sprout,
   Users,
 } from "lucide-react"
+import Link from "next/link"
 
 
 // Map sector.icon values (from DB) to Lucide icons
@@ -56,7 +57,7 @@ export default async function ActivitiesPage() {
                   {sector.image_url && (
                     <div className="h-64 w-full overflow-hidden">
                       <img
-                        src={sector.image_url}
+                        src={sector.image_url || "/placeholder.svg"}
                         alt={sector.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -72,6 +73,14 @@ export default async function ActivitiesPage() {
                     <p className="mt-2 text-muted-foreground text-lg leading-relaxed">
                       {sector.description}
                     </p>
+
+                    <Link
+                      href={`/projects?sector=${sector.id}`}
+                      className="mt-4 inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold transition-colors"
+                    >
+                      عرض الأنشطة في هذا القطاع
+                      <span className="text-2xl">←</span>
+                    </Link>
                   </CardContent>
                 </Card>
               )

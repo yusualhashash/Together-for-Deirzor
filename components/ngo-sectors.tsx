@@ -61,8 +61,8 @@ export function NGOSectors({ title, subtitle, sectors }: SectorsProps) {
                   </p>
 
                   <Link
-                    href={`/sectors#${sector.id}`}
-                    className="mt-3 sm:mt-4 inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold text-sm sm:text-base"
+                    href={`/projects?sector=${sector.id}`}
+                    className="mt-3 sm:mt-4 inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold text-sm sm:text-base transition-colors"
                   >
                     عرض الأنشطة في هذا القطاع
                     <span className="text-xl sm:text-2xl">←</span>
