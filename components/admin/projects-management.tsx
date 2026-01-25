@@ -159,7 +159,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
           budget: addForm.budget ? Number(addForm.budget) : null,
           start_date: addForm.start_date || null,
           end_date: addForm.end_date || null,
-          status: addForm.status, // Fixed typo: was "stateus"
+          status: addForm.status || "planned",
         }),
       })
 
@@ -167,7 +167,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         const data = await response.json()
         const projectId = data.projectId
 
-        // Only save NEW additional images (since this is a new project, all are new)
+        // Save additional images if any
         if (addForm.additional_images.length > 0) {
           for (const imageUrl of addForm.additional_images) {
             await fetch("/api/admin/projects/images/create", {
@@ -216,6 +216,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
           budget: editForm.budget ? Number(editForm.budget) : null,
           start_date: editForm.start_date || null,
           end_date: editForm.end_date || null,
+          status: editForm.status || "planned",
         }),
       })
 
