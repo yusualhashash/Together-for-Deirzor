@@ -65,8 +65,8 @@ export async function createProject({
   image_url: string | null
   is_featured?: boolean
   display_order?: number
-}): Promise<void> {
-  await sql`
+}): Promise<number> {
+  const result = await sql`
     INSERT INTO projects (
       title,
       description,
@@ -95,7 +95,9 @@ export async function createProject({
       ${is_featured},
       ${display_order}
     )
+    RETURNING id
   `
+  return result[0].id as number
 }
 
 
