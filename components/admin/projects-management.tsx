@@ -1,11 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import type { Project, Sector, ProjectImage } from "@/lib/types"
+import { ImageUploadField } from "@/components/admin/image-upload-field"
+import { MultiImageUploadField } from "@/components/admin/multi-image-upload-field"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -13,26 +19,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import type { Project, ProjectImage, Sector } from "@/lib/types"
 import {
-  Pencil,
-  Trash2,
-  ChevronUp,
   ChevronDown,
+  ChevronUp,
+  Pencil,
   Save,
-  X,
-  ImageIcon,
-  Plus,
+  Trash2,
+  X
 } from "lucide-react"
-import { ImageUploadField } from "@/components/admin/image-upload-field"
-import { MultiImageUploadField } from "@/components/admin/multi-image-upload-field"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card"
+import { useEffect, useState } from "react"
 
 /* ================= TYPES ================= */
 
@@ -64,7 +62,7 @@ const emptyForm: ProjectForm = {
   location: "",
   beneficiaries: "",
   budget: "",
-  status: "ongoing",
+  status: "",
   start_date: "",
   end_date: "",
   image_url: "",
@@ -161,6 +159,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
           budget: addForm.budget ? Number(addForm.budget) : null,
           start_date: addForm.start_date || null,
           end_date: addForm.end_date || null,
+          stateus: addForm.status,
         }),
       })
 
@@ -508,10 +507,10 @@ export function ProjectsManagement({ projects, sectors }: Props) {
             onValueChange={(v) => setForm({ ...form, status: v })}
           >
             <SelectTrigger>
-              <SelectValue />
+              <SelectValue placeholder="اختر الحالة" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ongoing">جاري</SelectItem>
+              <SelectItem value="active">جاري</SelectItem>
               <SelectItem value="completed">مكتمل</SelectItem>
               <SelectItem value="planned">مخطط</SelectItem>
             </SelectContent>

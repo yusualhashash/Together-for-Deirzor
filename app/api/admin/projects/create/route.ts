@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       end_date: data.end_date ?? null,
       beneficiaries: data.beneficiaries ?? null,
       budget: data.budget ?? null,
-      status: data.status,
+      status: data.status || "active",
       image_url: data.image_url ?? null,
       is_featured: data.is_featured ?? false,
       display_order: 0,

@@ -16,12 +16,10 @@ const statusColors: Record<string, string> = {
     active: "bg-green-500/10 text-green-700 border-green-500/20",
     completed: "bg-blue-500/10 text-blue-700 border-blue-500/20",
     planned: "bg-orange-500/10 text-orange-700 border-orange-500/20",
-    ongoing: "bg-green-500/10 text-green-700 border-green-500/20",
 }
 
 const statusLabels: Record<string, string> = {
     active: "نشط",
-    ongoing: "جاري",
     completed: "مكتمل",
     planned: "مخطط",
 }
