@@ -25,12 +25,6 @@ export default function NotFound() {
               العودة للرئيسية
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="gap-2 bg-transparent">
-            <Link href="/packages">
-              الباقات
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </Button>
         </div>
       </div>
     </div>
