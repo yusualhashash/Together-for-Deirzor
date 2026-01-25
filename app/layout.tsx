@@ -16,6 +16,7 @@ const cairo = Cairo({ subsets: ["arabic", "latin"], weight: ["400", "600", "700"
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getSiteSettings()
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tfdzo.org" || "https://tfdzo.com"
 
   return {
     title: {
@@ -27,6 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: siteSettings.site_name }],
     creator: siteSettings.site_name,
     publisher: siteSettings.site_name,
+    metadataBase: new URL(baseUrl),
     formatDetection: {
       email: false,
       address: false,
@@ -34,13 +36,42 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     alternates: {
       canonical: "/",
+      languages: {
+        "ar": "/",
+      },
     },
+    icons: {
+      icon: [
+        { url: "/logo.jpg", type: "image/jpeg" },
+        { url: "/favicon.ico", sizes: "any" },
+      ],
+      apple: [
+        { url: "/logo.jpg", sizes: "180x180", type: "image/jpeg" },
+      ],
+      shortcut: "/logo.jpg",
+    },
+    manifest: "/manifest.json",
     openGraph: {
       title: siteSettings.og_title,
       description: siteSettings.og_description,
       siteName: siteSettings.site_name,
       locale: "ar_SY",
       type: "website",
+      url: baseUrl,
+      images: [
+        {
+          url: "/logo.jpg",
+          width: 512,
+          height: 512,
+          alt: siteSettings.site_name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteSettings.og_title,
+      description: siteSettings.og_description,
+      images: ["/logo.jpg"],
     },
     robots: {
       index: true,
@@ -53,7 +84,10 @@ export async function generateMetadata(): Promise<Metadata> {
         "max-snippet": -1,
       },
     },
-    generator: "v0.app",
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION || "",
+    },
+    category: "humanitarian organization",
   }
 }
 

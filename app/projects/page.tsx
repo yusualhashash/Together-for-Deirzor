@@ -50,19 +50,10 @@ export default async function ProjectsPage({
   return (
     <div className="min-h-screen">
       {/* ================= HERO ================= */}
-      <section className="relative min-h-[50vh] flex items-center overflow-hidden bg-linear-to-br from-primary/10 via-accent/10 to-primary/5 pt-32 pb-20">
+      <section className="relative min-h-[50vh] flex items-center overflow-hidden bg-linear-to-br from-primary/10 via-accent/10 to-primary/5 pt-32 ">
         <div className="absolute inset-0 bg-grid-white/5" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-6">
-            {selectedSector && (
-              <Link
-                href="/projects"
-                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold mb-4"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                العودة لجميع المشاريع
-              </Link>
-            )}
             <h1 className="text-4xl md:text-6xl font-bold text-foreground">
               {selectedSector ? `مشاريع ${selectedSector.title}` : "مشاريعنا"}
             </h1>
@@ -123,7 +114,7 @@ export default async function ProjectsPage({
 
                       {/* DESCRIPTION */}
                       {project.description && (
-                        <p className="text-muted-foreground line-clamp-3 leading-relaxed">{project.description}</p>
+                        <p className="text-muted-foreground line-clamp-3 leading-relaxed whitespace-pre-line">{project.description}</p>
                       )}
 
                       {/* DETAILS */}

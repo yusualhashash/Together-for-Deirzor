@@ -96,12 +96,17 @@ export function ProjectsManagement({ projects, sectors }: Props) {
   const [addForm, setAddForm] = useState<ProjectForm>(emptyForm)
   const [editForm, setEditForm] = useState<ProjectForm>(emptyForm)
 
+  // Track original images loaded from DB to avoid duplicates
+  const [originalImageUrls, setOriginalImageUrls] = useState<string[]>([])
+
   /* ================= LOAD PROJECT IMAGES ================= */
   useEffect(() => {
     if (editingProject && projectImages.length > 0) {
+      const imageUrls = projectImages.map((img) => img.image_url)
+      setOriginalImageUrls(imageUrls)
       setEditForm((prev) => ({
         ...prev,
-        additional_images: projectImages.map((img) => img.image_url),
+        additional_images: imageUrls,
       }))
     }
   }, [projectImages, editingProject])
@@ -111,6 +116,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
       loadProjectImages(editingProject.id)
     } else {
       setProjectImages([])
+      setOriginalImageUrls([])
     }
   }, [editingProject])
 
@@ -215,9 +221,28 @@ export function ProjectsManagement({ projects, sectors }: Props) {
       })
 
       if (response.ok) {
-        // Save additional images if any
-        if (editForm.additional_images.length > 0) {
-          for (const imageUrl of editForm.additional_images) {
+        // Find images that were DELETED (in original but not in current form)
+        const deletedImages = originalImageUrls.filter(
+          (url) => !editForm.additional_images.includes(url)
+        )
+
+        // Delete removed images from database
+        for (const imageUrl of deletedImages) {
+          const imageToDelete = projectImages.find((img) => img.image_url === imageUrl)
+          if (imageToDelete) {
+            await fetch(`/api/admin/projects/images/delete?id=${imageToDelete.id}`, {
+              method: "DELETE",
+            })
+          }
+        }
+
+        // Only save NEW additional images (not already in DB)
+        const newImages = editForm.additional_images.filter(
+          (url) => !originalImageUrls.includes(url)
+        )
+
+        if (newImages.length > 0) {
+          for (const imageUrl of newImages) {
             await fetch("/api/admin/projects/images/create", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -330,10 +355,8 @@ export function ProjectsManagement({ projects, sectors }: Props) {
     if (!confirm("هل أنت متأكد من حذف الصورة؟")) return
 
     try {
-      await fetch("/api/admin/projects/images/delete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: imageId }),
+      await fetch(`/api/admin/projects/images/delete?id=${imageId}`, {
+        method: "DELETE",
       })
 
       toast({ title: "تم حذف الصورة" })

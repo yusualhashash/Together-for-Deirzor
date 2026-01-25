@@ -1,0 +1,27 @@
+{
+  "name": "معاً لأجل دير الزور",
+  "short_name": "معاً لدير الزور",
+  "description": "منظمة إنسانية سورية تعمل في مجالات التعليم والصحة والزراعة وحماية الطفل والتنمية المجتمعية",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a7f37",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["humanitarian", "nonprofit", "social"]
+}

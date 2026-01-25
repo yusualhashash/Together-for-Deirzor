@@ -57,26 +57,26 @@ export default async function ProjectDetailPage({
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background ">
             {/* Hero Section */}
-            <section className="relative flex items-center overflow-hidden bg-linear-to-br from-primary/10 via-accent/10 to-primary/5 py-32">
-                <div className="absolute inset-0 bg-grid-white/5" />
+            <section className="relative overflow-hidden bg-linear-to-br from-primary/10 via-primary/5 to-background py-12 md:py-20">
+                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
                 <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex flex-wrap gap-3 mb-4">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6 justify-center py-8">
                             {sector && (
-                                <Badge className="text-base px-4 py-1">
+                                <Badge className="text-xs md:text-sm px-3 py-1 md:px-4">
                                     {sector.title}
                                 </Badge>
                             )}
                             <Badge
-                                className={`${statusColors[project.status]} text-base px-4 py-1`}
+                                className={`${statusColors[project.status]} text-xs md:text-sm px-3 py-1 md:px-4`}
                             >
                                 {statusLabels[project.status] || project.status}
                             </Badge>
                         </div>
 
-                        <h1 className="text-xl md:text-3xl font-bold text-foreground">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                             {project.title}
                         </h1>
                     </div>
@@ -93,46 +93,48 @@ export default async function ProjectDetailPage({
 
             {/* Main Project Image (fallback if no gallery images) */}
             {projectImages.length === 0 && project.image_url && (
-                <section className="py-8 px-4">
-                    <div className="container mx-auto max-w-6xl">
-                        <Card className="overflow-hidden mb-6">
-                            <div className="relative h-96">
-                                <img
-                                    src={project.image_url || "/placeholder.svg"}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </Card>
+                <section className="py-6 md:py-10">
+                    <div className="w-full max-w-7xl mx-auto px-4 md:px-6">
+                        <div className="relative aspect-4/3 md:aspect-video lg:aspect-21/9 rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl">
+                            <img
+                                src={project.image_url || "/placeholder.svg"}
+                                alt={project.title}
+                                className="w-full h-full object-contain md:object-cover"
+                            />
+                        </div>
                     </div>
                 </section>
             )}
 
             {/* Project Details */}
-            <section className="py-12 px-4">
+            <section className="py-8 md:py-16 px-4">
                 <div className="container mx-auto max-w-6xl">
                     {/* Stats Grid */}
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-16">
                         {project.location && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <MapPin className="w-10 h-10 text-primary mx-auto mb-4" />
-                                    <h3 className="font-semibold text-base text-muted-foreground mb-2">
+                            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                                <CardContent className="p-4 md:p-8 text-center">
+                                    <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                        <MapPin className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                                    </div>
+                                    <h3 className="font-medium text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">
                                         الموقع
                                     </h3>
-                                    <p className="text-xl font-bold text-foreground">{project.location}</p>
+                                    <p className="text-sm md:text-xl font-bold text-foreground">{project.location}</p>
                                 </CardContent>
                             </Card>
                         )}
 
                         {project.beneficiaries && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <Users className="w-10 h-10 text-primary mx-auto mb-4" />
-                                    <h3 className="font-semibold text-base text-muted-foreground mb-2">
+                            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                                <CardContent className="p-4 md:p-8 text-center">
+                                    <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                        <Users className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                                    </div>
+                                    <h3 className="font-medium text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">
                                         المستفيدون
                                     </h3>
-                                    <p className="text-xl font-bold text-foreground">
+                                    <p className="text-sm md:text-xl font-bold text-foreground">
                                         {project.beneficiaries.toLocaleString()}
                                     </p>
                                 </CardContent>
@@ -140,13 +142,15 @@ export default async function ProjectDetailPage({
                         )}
 
                         {project.budget && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <DollarSign className="w-10 h-10 text-primary mx-auto mb-4" />
-                                    <h3 className="font-semibold text-base text-muted-foreground mb-2">
+                            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                                <CardContent className="p-4 md:p-8 text-center">
+                                    <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                        <DollarSign className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                                    </div>
+                                    <h3 className="font-medium text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">
                                         الميزانية
                                     </h3>
-                                    <p className="text-xl font-bold text-foreground">
+                                    <p className="text-sm md:text-xl font-bold text-foreground">
                                         ${project.budget.toLocaleString()}
                                     </p>
                                 </CardContent>
@@ -154,14 +158,17 @@ export default async function ProjectDetailPage({
                         )}
 
                         {(project.start_date || project.end_date) && (
-                            <Card>
-                                <CardContent className="p-8 text-center">
-                                    <Calendar className="w-10 h-10 text-primary mx-auto mb-4" />
-                                    <h3 className="font-semibold text-base text-muted-foreground mb-2">
+                            <Card className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                                <CardContent className="p-4 md:p-8 text-center">
+                                    <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                        <Calendar className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+                                    </div>
+                                    <h3 className="font-medium text-xs md:text-sm text-muted-foreground mb-1 md:mb-2">
                                         المدة الزمنية
                                     </h3>
-                                    <p className="text-sm font-bold text-foreground">
-                                        {formatDate(project.start_date)} - {formatDate(project.end_date)}
+                                    <p className="text-xs md:text-base font-bold text-foreground">
+                                        {formatDate(project.start_date)}
+                                        {project.end_date && ` - ${formatDate(project.end_date)}`}
                                     </p>
                                 </CardContent>
                             </Card>
@@ -170,11 +177,15 @@ export default async function ProjectDetailPage({
 
                     {/* Full Description */}
                     {project.description && (
-                        <Card>
-                            <CardContent className="p-12">
-                                <h2 className="text-4xl font-bold mb-8 text-foreground">تفاصيل المشروع</h2>
+                        <Card className="border-0 shadow-lg">
+                            <CardContent className="p-6 md:p-12">
+                                <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-foreground">
+                                    تفاصيل المشروع
+                                </h2>
                                 <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">
-                                    <p>{project.description}</p>
+                                    <p className="whitespace-pre-line text-sm md:text-base leading-7 md:leading-8">
+                                        {project.description}
+                                    </p>
                                 </div>
                             </CardContent>
                         </Card>
