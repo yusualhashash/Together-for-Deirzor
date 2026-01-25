@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json()
 
-    await createProject({
+    const projectId = await createProject({
       title: data.title,
       description: data.description,
       sector_id: data.sector_id ?? null,
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     revalidatePath("/projects")
     revalidatePath("/admin/projects")
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, projectId })
   } catch (error) {
     console.error("Error creating project:", error)
     return NextResponse.json(

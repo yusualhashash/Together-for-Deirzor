@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import type { Project, Sector } from "@/lib/types"
+import { useState, useEffect } from "react"
+import type { Project, Sector, ProjectImage } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,8 +21,11 @@ import {
   ChevronDown,
   Save,
   X,
+  ImageIcon,
+  Plus,
 } from "lucide-react"
 import { ImageUploadField } from "@/components/admin/image-upload-field"
+import { MultiImageUploadField } from "@/components/admin/multi-image-upload-field"
 import {
   Card,
   CardHeader,
@@ -44,6 +47,7 @@ type ProjectForm = {
   start_date: string
   end_date: string
   image_url: string
+  additional_images: string[]
 }
 
 interface Props {
@@ -64,6 +68,7 @@ const emptyForm: ProjectForm = {
   start_date: "",
   end_date: "",
   image_url: "",
+  additional_images: [],
 }
 
 /* ================= HELPER ================= */
@@ -84,9 +89,45 @@ export function ProjectsManagement({ projects, sectors }: Props) {
   const { toast } = useToast()
   const [isSaving, setIsSaving] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
-
+  const [projectImages, setProjectImages] = useState<ProjectImage[]>([])
+  const [newImageUrl, setNewImageUrl] = useState("")
+  const [newImageCaption, setNewImageCaption] = useState("")
+  const [loadingImages, setLoadingImages] = useState(false)
   const [addForm, setAddForm] = useState<ProjectForm>(emptyForm)
   const [editForm, setEditForm] = useState<ProjectForm>(emptyForm)
+
+  /* ================= LOAD PROJECT IMAGES ================= */
+  useEffect(() => {
+    if (editingProject && projectImages.length > 0) {
+      setEditForm((prev) => ({
+        ...prev,
+        additional_images: projectImages.map((img) => img.image_url),
+      }))
+    }
+  }, [projectImages, editingProject])
+
+  useEffect(() => {
+    if (editingProject) {
+      loadProjectImages(editingProject.id)
+    } else {
+      setProjectImages([])
+    }
+  }, [editingProject])
+
+  const loadProjectImages = async (projectId: number) => {
+    setLoadingImages(true)
+    try {
+      const response = await fetch(`/api/admin/projects/${projectId}/images`)
+      if (response.ok) {
+        const data = await response.json()
+        setProjectImages(data.images || [])
+      }
+    } catch (error) {
+      console.error("Failed to load project images:", error)
+    } finally {
+      setLoadingImages(false)
+    }
+  }
 
   /* ================= ADD ================= */
 
@@ -102,7 +143,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
 
     setIsSaving(true)
     try {
-      await fetch("/api/admin/projects/create", {
+      const response = await fetch("/api/admin/projects/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -117,8 +158,28 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         }),
       })
 
-      toast({ title: "تمت إضافة المشروع بنجاح" })
-      setTimeout(() => window.location.reload(), 800)
+      if (response.ok) {
+        const data = await response.json()
+        const projectId = data.projectId
+
+        // Save additional images if any
+        if (addForm.additional_images.length > 0) {
+          for (const imageUrl of addForm.additional_images) {
+            await fetch("/api/admin/projects/images/create", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                project_id: projectId,
+                image_url: imageUrl,
+                caption: null,
+              }),
+            })
+          }
+        }
+
+        toast({ title: "تمت إضافة المشروع بنجاح" })
+        setTimeout(() => window.location.reload(), 800)
+      }
     } catch {
       toast({
         title: "خطأ",
@@ -137,7 +198,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
 
     setIsSaving(true)
     try {
-      await fetch("/api/admin/projects/update", {
+      const response = await fetch("/api/admin/projects/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -153,9 +214,26 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         }),
       })
 
-      toast({ title: "تم تحديث المشروع بنجاح" })
-      setEditingProject(null)
-      setTimeout(() => window.location.reload(), 800)
+      if (response.ok) {
+        // Save additional images if any
+        if (editForm.additional_images.length > 0) {
+          for (const imageUrl of editForm.additional_images) {
+            await fetch("/api/admin/projects/images/create", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                project_id: editingProject.id,
+                image_url: imageUrl,
+                caption: null,
+              }),
+            })
+          }
+        }
+
+        toast({ title: "تم تحديث المشروع بنجاح" })
+        setEditingProject(null)
+        setTimeout(() => window.location.reload(), 800)
+      }
     } catch {
       toast({
         title: "خطأ",
@@ -207,6 +285,70 @@ export function ProjectsManagement({ projects, sectors }: Props) {
     setTimeout(() => window.location.reload(), 500)
   }
 
+  /* ================= PROJECT IMAGES MANAGEMENT ================= */
+
+  const handleAddImage = async () => {
+    if (!editingProject || !newImageUrl.trim()) {
+      toast({
+        title: "خطأ",
+        description: "يرجى رفع صورة",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const response = await fetch("/api/admin/projects/images/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          project_id: editingProject.id,
+          image_url: newImageUrl,
+          caption: newImageCaption || null,
+        }),
+      })
+
+      if (response.ok) {
+        toast({ title: "تمت إضافة الصورة بنجاح" })
+        setNewImageUrl("")
+        setNewImageCaption("")
+        loadProjectImages(editingProject.id)
+      }
+    } catch {
+      toast({
+        title: "خطأ",
+        description: "فشل إضافة الصورة",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDeleteImage = async (imageId: number) => {
+    if (!confirm("هل أنت متأكد من حذف الصورة؟")) return
+
+    try {
+      await fetch("/api/admin/projects/images/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: imageId }),
+      })
+
+      toast({ title: "تم حذف الصورة" })
+      if (editingProject) {
+        loadProjectImages(editingProject.id)
+      }
+    } catch {
+      toast({
+        title: "خطأ",
+        description: "فشل حذف الصورة",
+        variant: "destructive",
+      })
+    }
+  }
+
   /* ================= START EDIT ================= */
 
   const startEdit = (project: Project) => {
@@ -222,6 +364,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
       start_date: formatDate(project.start_date),
       end_date: formatDate(project.end_date),
       image_url: project.image_url || "",
+      additional_images: [],
     })
 
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -271,12 +414,13 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         </div>
 
         <div>
-          <Label className="p-2">الوصف</Label>
+          <Label className="p-2">الوصف القصير</Label>
           <Textarea
             value={form.description}
             onChange={(e) =>
               setForm({ ...form, description: e.target.value })
             }
+            rows={2}
           />
         </div>
 
@@ -352,11 +496,20 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         </div>
 
         <ImageUploadField
-          label="صورة المشروع"
+          label="صورة المشروع الرئيسية"
           currentImage={form.image_url}
           onImageChange={(url) =>
             setForm({ ...form, image_url: url || "" })
           }
+        />
+
+        <MultiImageUploadField
+          label="صور إضافية للمشروع"
+          images={form.additional_images}
+          onImagesChange={(images) =>
+            setForm({ ...form, additional_images: images })
+          }
+          maxImages={10}
         />
 
         <div className="flex gap-2">

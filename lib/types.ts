@@ -33,6 +33,17 @@ export interface Project {
   updated_at: string
 }
 
+// Project Image
+export interface ProjectImage {
+  id: number
+  project_id: number
+  image_url: string
+  caption: string | null
+  display_order: number
+  created_at: string
+  updated_at: string
+}
+
 // Team Member Types
 export interface TeamMember {
   id: number
