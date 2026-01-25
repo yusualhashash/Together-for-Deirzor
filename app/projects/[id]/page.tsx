@@ -59,8 +59,9 @@ export default async function ProjectDetailPage({
     return (
         <div className="min-h-screen bg-background ">
             {/* Hero Section */}
-            <section className="relative overflow-hidden bg-linear-to-br from-primary/10 via-primary/5 to-background py-12 md:py-20">
+            <section className="relative overflow-hidden bg-linear-to-br from-primary/10 via-primary/5 to-background px-4 sm:px-8 lg:px-16 py-12 md:py-20">
                 <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-4xl mx-auto text-center">
                         <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6 justify-center py-8">
@@ -69,6 +70,7 @@ export default async function ProjectDetailPage({
                                     {sector.title}
                                 </Badge>
                             )}
+
                             <Badge
                                 className={`${statusColors[project.status]} text-xs md:text-sm px-3 py-1 md:px-4`}
                             >
@@ -76,12 +78,13 @@ export default async function ProjectDetailPage({
                             </Badge>
                         </div>
 
-                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold text-foreground leading-tight text-center">
                             {project.title}
                         </h1>
                     </div>
                 </div>
             </section>
+
 
             {/* Project Images Slider - Client Component */}
             {projectImages.length > 0 && (
@@ -179,7 +182,7 @@ export default async function ProjectDetailPage({
                     {project.description && (
                         <Card className="border-0 shadow-lg">
                             <CardContent className="p-6 md:p-12">
-                                <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-foreground">
+                                <h2 className="text-1xl md:text-3xl font-bold mb-4 md:mb-8 text-foreground">
                                     تفاصيل المشروع
                                 </h2>
                                 <div className="prose prose-lg max-w-none text-muted-foreground leading-relaxed">

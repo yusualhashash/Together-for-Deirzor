@@ -47,6 +47,7 @@ export async function createProject({
   start_date,
   end_date,
   beneficiaries,
+  budget,
   status,
   image_url,
   is_featured = false,
@@ -59,6 +60,7 @@ export async function createProject({
   start_date: string | null
   end_date: string | null
   beneficiaries: number | null
+  budget: number | null,
   status: string
   image_url: string | null
   is_featured?: boolean
@@ -73,6 +75,7 @@ export async function createProject({
       start_date,
       end_date,
       beneficiaries,
+      budget,
       status,
       image_url,
       is_featured,
@@ -86,6 +89,7 @@ export async function createProject({
       ${start_date},
       ${end_date},
       ${beneficiaries},
+      ${budget},
       ${status},
       ${image_url},
       ${is_featured},

@@ -437,7 +437,7 @@ export function ProjectsManagement({ projects, sectors }: Props) {
         </div>
 
         <div>
-          <Label className="p-2">الوصف القصير</Label>
+          <Label className="p-2">الوصف</Label>
           <Textarea
             value={form.description}
             onChange={(e) =>
